@@ -1,8 +1,8 @@
-from tasks import add
+from tasks import tasks
 
 
 def app():
-    add.delay(4, 4)
+    tasks.delay(4, 4)
     print("Task added to queue")
 
 

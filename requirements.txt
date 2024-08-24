@@ -20,6 +20,7 @@ typing_extensions==4.12.2
 tzdata==2024.1
 vine==5.1.0
 wcwidth==0.2.13
+pyyaml==6.0.2
 
 # lint and format
 black==24.8.0

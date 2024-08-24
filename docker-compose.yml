@@ -1,4 +1,3 @@
-version: "3"
 services:
   python:
     build: .
@@ -23,7 +22,7 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
-    command: celery -A tasks worker -l INFO
+    command: celery -A tasks.celery_app worker -l INFO
     environment:
       - CELERY_BROKER_URL
       - CELERY_RESULT_BACKEND
@@ -47,7 +46,7 @@ services:
     working_dir: /app
     ports:
       - 5555:5555
-    command: celery -A tasks flower --address=0.0.0.0 --port=5555
+    command: celery -A tasks.celery_app flower --address=0.0.0.0 --port=5555
     depends_on:
       - python
       - redis

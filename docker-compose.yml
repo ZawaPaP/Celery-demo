@@ -1,0 +1,53 @@
+version: "3"
+services:
+  python:
+    build: .
+    tty: true
+    image: python
+    container_name: python
+    volumes:
+      - ./:/app
+    working_dir: /app
+    environment:
+      - CELERY_BROKER_URL
+      - CELERY_RESULT_BACKEND
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+  celery:
+    image: python
+    tty: true
+    container_name: celery
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: celery -A tasks worker -l INFO
+    environment:
+      - CELERY_BROKER_URL
+      - CELERY_RESULT_BACKEND
+    env_file:
+      - .env
+    depends_on:
+      - python
+      - redis
+
+  redis:
+    image: redis:5.0.3-alpine
+    container_name: redis
+    tty: true
+
+  monitor:
+    image: python
+    tty: true
+    container_name: monitor
+    volumes:
+      - ./:/app
+    working_dir: /app
+    ports:
+      - 5555:5555
+    command: celery -A tasks flower --address=0.0.0.0 --port=5555
+    depends_on:
+      - python
+      - redis
